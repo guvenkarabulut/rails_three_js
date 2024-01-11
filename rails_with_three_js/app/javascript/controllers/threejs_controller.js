@@ -25,15 +25,11 @@ export default class extends Controller {
     const grey = 0x777777;
 
     this.geometry = new THREE.BoxGeometry();
-    this.material = new THREE.MeshBasicMaterial({
-      color: green,
-      wireframe: true,
-    });
+    this.originCube = this.createCube(0.5, 0.5, -0.5, red);
+    this.offsetCube = this.createCube(0.5, 0.5, -1.5, green);
+    this.cubeCube = this.createCube(1.5, 0.5, -1.5, blue);
 
-    this.originCube = this.createCube(0, 0, 0);
-    this.offsetCube = this.createCube(5, 5, -5);
-
-    this.pointLight = new THREE.PointLight(0xffffff);
+    this.pointLight = new THREE.PointLight(0x00ffff);
     this.pointLight.position.set(8, 4, -5);
 
     this.lightHelper = new THREE.PointLightHelper(this.pointLight);
@@ -44,15 +40,17 @@ export default class extends Controller {
       this.gridHelper,
       this.originCube,
       this.offsetCube,
+      this.cubeCube,
       this.pointLight,
     );
 
-    const backgroundTexture = new THREE.TextureLoader().load(
-      "/assets/image.jpg",
-    );
-    this.scene.background = backgroundTexture;
+    // const backgroundTexture = new THREE.TextureLoader().load(
+    //   "/assets/image.jpg",
+    // );
+    // this.scene.background = backgroundTexture;
 
-    this.camera.position.z = 5;
+    this.camera.position.z = 10;
+    this.camera.position.y = 20;
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
     this.animate();
@@ -61,18 +59,23 @@ export default class extends Controller {
   animate() {
     requestAnimationFrame(this.animate.bind(this));
 
-    this.originCube.rotation.x += 0.01;
-    this.originCube.rotation.y += 0.01;
-
-    this.offsetCube.rotation.x -= 0.003;
-    this.offsetCube.rotation.y -= 0.002;
+    // this.originCube.rotation.x += 0.01;
+    // this.originCube.rotation.y += 0.01;
+    //
+    // this.offsetCube.rotation.x -= 0.003;
+    // this.offsetCube.rotation.y -= 0.002;
 
     this.controls.update();
 
     this.renderer.render(this.scene, this.camera);
   }
 
-  createCube(x, y, z) {
+  createCube(x, y, z, color) {
+    this.material = new THREE.MeshBasicMaterial({
+      color: color,
+      wireframe: false,
+    });
+
     const cube = new THREE.Mesh(this.geometry, this.material);
     cube.position.set(x, y, z);
 
